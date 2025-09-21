@@ -1,8 +1,8 @@
 # Agnes-kitchen-legacy
-A mother-daughter open-source project to preserve and share family recipes from moms, starting with Agnes's Malaysian fusion cuisine.
+A mother-daughter open-source project to preserve and share family recipes, starting with my mom, Agnes. 
 
 ## Project Vision
-Agnes's Kitchen Legacy is more than just a recipe website- it's a platform dedicated to preserving the culinary heritage of mothers around the world. Starting with Agnes's Malaysian fusion recipes, this platform aims to create an easy-to-use space where all mothers can share their cooking wisdom with future generations.
+The idea of Agnes's Kitchen Legacy started as a recipe website, but we soon realised it could be a platform dedicated to preserving the culinary heritage of mothers around the world. Starting with Agnes's Malaysian fusion recipes, this platform aims to create an easy-to-use space where all mothers can share their cooking wisdom with future generations.
 
 ## Features
 
