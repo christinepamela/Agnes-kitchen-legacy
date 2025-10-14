@@ -7,7 +7,7 @@ A mother-daughter open-source project to preserve and celebrate my mom, Agnes's 
 - Simple voice-input interface for Agnes to add recipes
 - Photo upload capability (up to 5 photos per recipe)
 - Admin dashboard for review and editing
-- Public gallery organized by category (chicken, fish, vegetables, mutton, other)
+- Public gallery organized by category (chicken, fish, vegetables, beef, pork, mutton, desserts other)
 
 ### Phase 2: AI Recipe Generation
 - Analyze cooking patterns and style
@@ -28,7 +28,7 @@ A mother-daughter open-source project to preserve and celebrate my mom, Agnes's 
 This is a personal project but we will open source it for anyone to adapt
 
 ## License
-This project is licensed under the MIT License - see the LICENSE.md file for details.
+This project is licensed under the MIT License - see the LICENSE.md file for details. It is a family project but we will open source it for anyone to adapt
 
 ## Acknowledgments
 This is a mother-daughter project. Special thanks to my mom Agnes, whose culinary wisdom inspired this project. 
