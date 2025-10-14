@@ -1,50 +1,31 @@
 # Agnes-kitchen-legacy
-A mother-daughter open-source project to preserve and share family recipes, starting with my mom, Agnes. 
+A mother-daughter open-source project to preserve and celebrate my mom, Agnes's Malaysian cooking recipes, with plans to use AI to generate new recipes in her cooking style.
 
-## Project Vision
-The idea of Agnes's Kitchen Legacy started as a recipe website, but we soon realised it could be a platform dedicated to preserving the culinary heritage of mothers around the world. Starting with Agnes's Malaysian fusion recipes, this platform aims to create an easy-to-use space where all mothers can share their cooking wisdom with future generations.
+## Project Phases
 
-## Features
+### Phase 1: Recipe Collection
+- Simple voice-input interface for Agnes to add recipes
+- Photo upload capability (up to 5 photos per recipe)
+- Admin dashboard for review and editing
+- Public gallery organized by category (chicken, fish, vegetables, mutton, other)
 
-### For Recipe Contributors (Mothers)
-- Simple and intuitive login system
-- Easy recipe input interface with:
-  - Flexible measurement options (precise measurements and estimations)
-  - Dropdown lists for common ingredients
-  - Simple photo upload
-  - User-friendly text input for instructions
-  - Draft saving capability
+### Phase 2: AI Recipe Generation
+- Analyze cooking patterns and style
+- Generate new recipes based on Agnes's style
+- (Coming after 100+ recipes collected)
 
-### For Users
-- Browse recipes by cook
-- Search and filter recipes
-- AI-powered cooking style matching (coming soon)
-- Mobile and desktop friendly
+## Tech Stack
+- Frontend: React
+- Backend: Node.js + Express
+- Database: Firebase Firestore
+- File Storage: Firebase Cloud Storage
+- Hosting: Vercel (frontend), Firebase (backend/database)
 
-## Technical Stack
+## Getting Started
+(We'll fill this in soon!)
 
-### Frontend
-- React.js
-- Next.js
-- Tailwind CSS
-- TypeScript
-
-### Backend
-- Node.js
-- Express
-- MongoDB
-- Firebase Authentication
-
-### AI Component (Future Implementation)
-- Open-source AI alternatives for recipe analysis
-- Custom training based on recipe patterns
-
-## Multilingual Support
-- Currently supporting English
-- Planned support for multiple languages
-
-## Contributing
-We welcome contributions! Please check out our contributing guidelines in CONTRIBUTING.md.
+## License
+This is a personal project but we will open source it for anyone to adapt
 
 ## License
 This project is licensed under the MIT License - see the LICENSE.md file for details.
