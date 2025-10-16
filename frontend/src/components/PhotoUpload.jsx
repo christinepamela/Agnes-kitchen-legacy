@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { storage } from '../firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
-const PhotoUpload = ({ recipeId, onPhotoUploadComplete }) => {
-  const [uploadedPhotos, setUploadedPhotos] = useState([]);
+const PhotoUpload = ({ recipeId, onPhotoUploadComplete, existingPhotos = [] }) => {
+  const [uploadedPhotos, setUploadedPhotos] = useState(existingPhotos);
   const [isUploading, setIsUploading] = useState(false);
+
+  useEffect(() => {
+    setUploadedPhotos(existingPhotos);
+  }, [existingPhotos]);
 
   const handlePhotoSelect = async (event) => {
     const files = Array.from(event.target.files);
@@ -15,13 +19,17 @@ const PhotoUpload = ({ recipeId, onPhotoUploadComplete }) => {
 
     setIsUploading(true);
     try {
+      const newPhotos = [];
       for (let file of files) {
-        const storageRef = ref(storage, `recipes/${recipeId}/${file.name}`);
+        const timestamp = Date.now();
+        const storageRef = ref(storage, `recipes/${recipeId || 'temp'}/${timestamp}_${file.name}`);
         await uploadBytes(storageRef, file);
         const url = await getDownloadURL(storageRef);
-        setUploadedPhotos(prev => [...prev, { id: Date.now(), url, name: file.name }]);
+        newPhotos.push({ id: timestamp + Math.random(), url, name: file.name });
       }
-      onPhotoUploadComplete(uploadedPhotos);
+      const updated = [...uploadedPhotos, ...newPhotos];
+      setUploadedPhotos(updated);
+      onPhotoUploadComplete(updated);
     } catch (error) {
       console.error('Error uploading photos:', error);
       alert('Error uploading photos');
@@ -49,8 +57,13 @@ const PhotoUpload = ({ recipeId, onPhotoUploadComplete }) => {
           accept="image/*"
           onChange={handlePhotoSelect}
           disabled={isUploading || uploadedPhotos.length >= 5}
-          style={{ padding: '0.5rem', cursor: uploadedPhotos.length >= 5 ? 'not-allowed' : 'pointer' }}
+          style={{ 
+            padding: '0.5rem', 
+            cursor: uploadedPhotos.length >= 5 ? 'not-allowed' : 'pointer',
+            width: '100%'
+          }}
         />
+        {isUploading && <p style={{ color: '#667eea', marginTop: '0.5rem' }}>Uploading...</p>}
       </div>
 
       {uploadedPhotos.length > 0 && (

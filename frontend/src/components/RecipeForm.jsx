@@ -4,9 +4,9 @@ import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import VoiceInput from './VoiceInput';
 import PhotoUpload from './PhotoUpload';
 
-const RecipeForm = ({ onRecipeSaved }) => {
-  const [step, setStep] = useState(1); // 1: Basics, 2: Ingredients, 3: Photos
-  const [recipe, setRecipe] = useState({
+const RecipeForm = ({ onRecipeSaved, editMode = false, existingRecipe = null }) => {
+  const [step, setStep] = useState(1);
+  const [recipe, setRecipe] = useState(existingRecipe || {
     title: '',
     category: 'chicken',
     ingredients: [{ name: '', amount: '', unit: 'tsp' }],
@@ -18,7 +18,7 @@ const RecipeForm = ({ onRecipeSaved }) => {
   });
 
   const categories = ['chicken', 'fish', 'vegetables', 'beef', 'pork', 'mutton', 'desserts', 'other'];
-  const units = ['tsp', 'tbsp', 'cup', 'ml', 'l', 'g', 'kg', 'piece', 'pieces'];
+  const units = ['tsp', 'tbsp', 'cup', 'ml', 'l', 'g', 'kg', 'piece', 'pieces', 'pods', 'inches'];
 
   const handleBasicChange = (field, value) => {
     setRecipe(prev => ({ ...prev, [field]: value }));
@@ -57,24 +57,33 @@ const RecipeForm = ({ onRecipeSaved }) => {
     try {
       const recipeData = {
         ...recipe,
-        createdAt: serverTimestamp(),
+        createdAt: editMode ? recipe.createdAt : serverTimestamp(),
         updatedAt: serverTimestamp(),
-        status: 'draft'
+        status: recipe.status || 'draft'
       };
 
-      const docRef = await addDoc(collection(db, 'recipes'), recipeData);
-      alert('Recipe saved successfully! ✓');
-      setRecipe({
-        title: '',
-        category: 'chicken',
-        ingredients: [{ name: '', amount: '', unit: 'tsp' }],
-        cookingMethod: '',
-        servings: 4,
-        prepTime: 15,
-        cookTime: 30,
-        photos: []
-      });
-      setStep(1);
+      if (editMode && existingRecipe?.id) {
+        const { doc, updateDoc } = await import('firebase/firestore');
+        await updateDoc(doc(db, 'recipes', existingRecipe.id), recipeData);
+        alert('Recipe updated successfully! ✓');
+      } else {
+        await addDoc(collection(db, 'recipes'), recipeData);
+        alert('Recipe saved successfully! ✓');
+      }
+
+      if (!editMode) {
+        setRecipe({
+          title: '',
+          category: 'chicken',
+          ingredients: [{ name: '', amount: '', unit: 'tsp' }],
+          cookingMethod: '',
+          servings: 4,
+          prepTime: 15,
+          cookTime: 30,
+          photos: []
+        });
+        setStep(1);
+      }
       if (onRecipeSaved) onRecipeSaved();
     } catch (error) {
       console.error('Error saving recipe:', error);
@@ -84,8 +93,7 @@ const RecipeForm = ({ onRecipeSaved }) => {
 
   return (
     <div className="recipe-form">
-      {/* Step Indicator */}
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', justifyContent: 'center' }}>
+      <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', justifyContent: 'center', flexWrap: 'wrap' }}>
         <button
           onClick={() => setStep(1)}
           className={`btn ${step === 1 ? 'btn-primary' : 'btn-secondary'}`}
@@ -106,11 +114,10 @@ const RecipeForm = ({ onRecipeSaved }) => {
         </button>
       </div>
 
-      {/* Step 1: Basics */}
       {step === 1 && (
         <div>
           <h2>Step 1: Recipe Basics</h2>
-          <VoiceInput onTranscriptComplete={(text) => handleBasicChange('title', text)} />
+          {!editMode && <VoiceInput onTranscriptComplete={(text) => handleBasicChange('title', text)} />}
 
           <div className="form-group">
             <label>Recipe Title *</label>
@@ -150,7 +157,6 @@ const RecipeForm = ({ onRecipeSaved }) => {
         </div>
       )}
 
-      {/* Step 2: Ingredients */}
       {step === 2 && (
         <div>
           <h2>Step 2: Ingredients & Method</h2>
@@ -196,15 +202,14 @@ const RecipeForm = ({ onRecipeSaved }) => {
         </div>
       )}
 
-      {/* Step 3: Photos */}
       {step === 3 && (
         <div>
           <h2>Step 3: Add Photos</h2>
-          <PhotoUpload recipeId={recipe.title} onPhotoUploadComplete={handlePhotoUploadComplete} />
+          <PhotoUpload recipeId={recipe.title || existingRecipe?.id} onPhotoUploadComplete={handlePhotoUploadComplete} existingPhotos={recipe.photos} />
 
           <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
             <button onClick={() => setStep(2)} className="btn btn-secondary">← Back to Ingredients</button>
-            <button onClick={saveRecipe} className="btn btn-success">✓ Save Recipe</button>
+            <button onClick={saveRecipe} className="btn btn-success">✓ {editMode ? 'Update Recipe' : 'Save Recipe'}</button>
           </div>
         </div>
       )}
